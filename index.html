@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Para o meu amor</title>
+  
+  <!-- Fonte moderna -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 300;
+      margin: 0;
+      background-color: #ffffff;
+      color: #333;
+      text-align: center;
+      overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 40px 20px;
+      background-color: #6A1B9A;
+      color: white;
+      position: relative;
+      z-index: 10;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2.5em;
+      font-weight: 400;
+    }
+
+    section {
+      padding: 40px 20px;
+      position: relative;
+      z-index: 10;
+    }
+
+    h2 {
+      color: #6A1B9A;
+      font-weight: 400;
+    }
+
+    p {
+      font-size: 1.1em;
+      line-height: 1.6;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    /* Navbar */
+    .navbar {
+      background-color: #8e24aa;
+      padding: 10px 20px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .navbar .nav-link {
+      color: white;
+      font-weight: 500;
+      text-decoration: none;
+      font-size: 1.1em;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+    }
+
+    .navbar .nav-link:hover {
+      background-color: #6a1b9a;
+    }
+
+    /* Carrossel */
+    .carousel-container {
+      position: relative;
+      max-width: 400px;
+      margin: 20px auto;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      height: 250px; /* fixar altura para evitar salto */
+    }
+
+    .carousel-container img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: 12px;
+      opacity: 0;
+      transition: opacity 1.2s ease-in-out;
+    }
+
+    .carousel-container img.active {
+      opacity: 1;
+      position: relative;
+    }
+
+    /* Linha do tempo */
+    .timeline-item {
+      margin: 20px auto;
+      padding: 15px 20px;
+      border-left: 4px solid #BA68C8;
+      background-color: #f9f2fd;
+      border-radius: 8px;
+      text-align: left;
+      max-width: 600px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      position: relative;
+      z-index: 10;
+    }
+
+    .surprise {
+      margin-top: 20px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .btn {
+      background-color: #BA68C8;
+      color: #ffffff;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #6A1B9A;
+    }
+
+    .hidden {
+      display: none;
+      margin-top: 15px;
+      color: #6A1B9A;
+      font-weight: 400;
+      position: relative;
+      z-index: 10;
+    }
+
+    iframe {
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      position: relative;
+      z-index: 10;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.9em;
+      color: #777;
+      padding: 20px;
+      background-color: #f5f5f5;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Corações caindo */
+    .heart {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      background-color: #BA68C8;
+      opacity: 0.8;
+      transform: rotate(45deg);
+      animation: fall linear forwards;
+      z-index: 5;
+      pointer-events: none;
+      box-shadow:
+        inset -2px -2px 0 #8e3ea1;
+    }
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: #BA68C8;
+      border-radius: 50%;
+      box-shadow:
+        inset -2px -2px 0 #8e3ea1;
+    }
+    .heart::before {
+      top: -10px;
+      left: 0;
+    }
+    .heart::after {
+      left: 10px;
+      top: 0;
+    }
+
+    @keyframes fall {
+      0% {
+        opacity: 0.8;
+        transform: translateY(-30px) rotate(45deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(110vh) rotate(45deg);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Feliz Dia dos Namorados</h1>
+    <p>Esse site é só pra você</p>
+  </header>
+
+  <nav class="navbar">
+    <a href="carro.html" class="nav-link">Joguinho</a>
+  </nav>
+
+  <section>
+    <h2>Carta de Amor</h2>
+    <p>Meu amor, você é a melhor parte dos meus dias. Obrigado por estar sempre ao meu lado. Te amo mais do que palavras podem dizer e do que eu posso expressar! Espero passar cada segundo da minha vida ao seu lado, criando memórias, desconbrindo o mundo e crescendo juntos! Que possamos passar todos os dias 12 sendo eternos namorados. </p>
+  </section>
+
+  <section>
+    <h2>Nossas Fotos</h2>
+    <div class="carousel-container" aria-label="Carrossel de fotos">
+      <img src="fotos/img1.jpg" alt="Foto do casal 1" class="active">
+      <img src="fotos/img2.jpg" alt="Foto do casal 2">
+      <img src="fotos/img3.jpg" alt="Foto do casal 3">
+      <img src="fotos/img4.jpeg" alt="Foto do casal 4">
+    </div>
+  </section>
+
+  <section>
+    <h2>Nossa História</h2>
+    <div class="timeline-item">
+      <strong>29 de Junho de 2022</strong> — Nos conhecemos
+    </div>
+    <div class="timeline-item">
+      <strong>Dezembro de 2022</strong> — Eu me apaixonei por você!
+    </div>
+    <div class="timeline-item">
+      <strong>Janeiro de 2023</strong> — Nosso primeiro "eu te amo"
+    </div>
+    <div class="timeline-item">
+      <strong>2023</strong> Pula esse ano... :)
+    </div>
+     <div class="timeline-item">
+      <strong>Fevereiro de 2024</strong>  Nosso primeiro Beijo no Cinema.
+    </div>
+    <div class="timeline-item">
+      <strong>A partir dai </strong> é história para contar e uma vida toda para viver.
+    </div>
+  </section>
+
+  <section>
+    <h2>Nossa Playlist</h2>
+    <iframe src="https://open.spotify.com/embed/playlist/1dChbiYIVoCDC7TGeeIXyp" width="80%" height="152" frameBorder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  </section>
+
+  <section>
+    <h2>Contador de Amor</h2>
+    <p id="contador">Carregando...</p>
+  </section>
+
+  <footer>
+    <p>Feito com amor, para o meu amor.</p>
+  </footer>
+
+  <script>
+
+    // Contador
+    const dataConhecimento = new Date('2023-01-15T00:00:00').getTime();
+    setInterval(() => {
+      const agora = new Date().getTime();
+      const distancia = agora - dataConhecimento;
+
+      const dias = Math.floor(distancia / (1000 * 60 * 60 * 24));
+      const horas = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutos = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
+      const segundos = Math.floor((distancia % (1000 * 60)) / 1000);
+
+      document.getElementById("contador").innerText = `${dias} dias, ${horas}h ${minutos}min ${segundos}s juntos.`;
+    }, 1000);
+
+    // Carrossel automático com fade
+    const imagens = document.querySelectorAll('.carousel-container img');
+    let indice = 0;
+
+    function trocaImagem() {
+      imagens[indice].classList.remove('active');
+      indice = (indice + 1) % imagens.length;
+      imagens[indice].classList.add('active');
+    }
+
+    setInterval(trocaImagem, 3000);
+
+    // Corações caindo
+    function criaCoracao() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.style.left = Math.random() * 100 + 'vw'; // posição horizontal aleatória
+      heart.style.animationDuration = (3 + Math.random() * 3) + 's'; // duração aleatória entre 3-6s
+      heart.style.width = (10 + Math.random() * 15) + 'px';
+      heart.style.height = heart.style.width;
+
+      document.body.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 6000); // remove após animação
+    }
+
+    // Criar corações periodicamente
+    setInterval(criaCoracao, 400);
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>Valinhos</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet" />
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #fff;
+            position: relative;
+            overflow: hidden; /* Cuidado com este em mobile, pode cortar conteúdo */
+            /* cursor: none; */ /* Comentado para não interferir com toque e ser padrão em desktop */
+            min-height: 100vh;
+        }
+
+        header {
+            padding: 40px 20px;
+            background-color: #6A1B9A;
+            color: white;
+            position: relative;
+            z-index: 20;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 400;
+        }
+
+        header p {
+            margin: 5px 0 0 0;
+            font-weight: 300;
+            font-size: 1.1em;
+        }
+
+        nav.navbar {
+            background-color: #8e24aa;
+            padding: 10px 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        nav.navbar .nav-link {
+            color: white;
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 1.1em;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        nav.navbar .nav-link:hover {
+            background-color: #6a1b9a;
+        }
+
+        #car {
+            position: fixed; /* fixo para melhor comportamento em mobile */
+            width: 60px;
+            height: 60px;
+            pointer-events: none; /* Mantemos para não interferir com cliques de outros elementos, mas o JS vai gerenciar o arrastar */
+            user-select: none;
+            z-index: 25;
+            touch-action: none; /* Previne rolagem ou zoom padrão durante o arrastar */
+        }
+
+        #car img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        #finish-line {
+            position: fixed;
+            bottom: 20px; /* Padrão para desktop */
+            right: 20px;
+            width: 10px;
+            height: 80px;
+            background: repeating-linear-gradient(
+                45deg,
+                #6A1B9A,
+                #6A1B9A 10px,
+                #ffffff 10px,
+                #ffffff 20px
+            );
+            border-radius: 4px;
+            box-shadow: 0 0 10px #6A1B9A;
+            z-index: 20;
+            user-select: none;
+        }
+
+        #start-line {
+            position: fixed;
+            top: 250px; /* Padrão para desktop */
+            left: 20px;
+            width: 10px;
+            height: 80px;
+            background: repeating-linear-gradient(
+                45deg,
+                #BA68C8,
+                #BA68C8 10px,
+                #ffffff 10px,
+                #ffffff 20px
+            );
+            border-radius: 4px;
+            box-shadow: 0 0 10px #BA68C8;
+            z-index: 20;
+            user-select: none;
+        }
+
+        #message-finish {
+            position: fixed;
+            bottom: 120px; /* Padrão para desktop */
+            right: 20px;
+            background: #6A1B9A;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-size: 1.3em;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(106, 27, 154, 0.8);
+            opacity: 0;
+            pointer-events: none;
+            user-select: none;
+            z-index: 30;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        #message-finish.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* --- MEDIA QUERIES PARA MOBILE --- */
+        @media (max-width: 768px) {
+            header {
+                padding: 20px 10px;
+            }
+            header h1 {
+                font-size: 1.8em;
+            }
+            header p {
+                font-size: 0.9em;
+            }
+            nav.navbar {
+                padding: 8px 10px;
+            }
+            nav.navbar .nav-link {
+                font-size: 0.95em;
+                padding: 6px 10px;
+            }
+
+            #car {
+                width: 45px; /* Reduz o tamanho do carro em mobile */
+                height: 45px;
+            }
+
+            #start-line {
+                top: 130px; /* Ajuste para evitar sobreposição com header/nav */
+                height: 60px;
+                left: 10px;
+            }
+
+            #finish-line {
+                bottom: 100px; /* Ajuste para subir a linha de chegada */
+                height: 60px;
+                right: 10px;
+            }
+
+            #message-finish {
+                bottom: 170px; /* Ajuste para acompanhar a linha de chegada */
+                font-size: 1.1em;
+                padding: 10px 15px;
+                right: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.5em;
+            }
+            header p {
+                font-size: 0.8em;
+            }
+            nav.navbar .nav-link {
+                font-size: 0.9em;
+                padding: 5px 8px;
+            }
+
+            #car {
+                width: 40px; /* Ainda menor em telas de celular */
+                height: 40px;
+            }
+
+            #start-line {
+                top: 90px; /* Mais para cima em telas menores */
+                height: 50px;
+            }
+
+            #finish-line {
+                bottom: 70px; /* Mais para cima em telas menores */
+                height: 50px;
+            }
+
+            #message-finish {
+                bottom: 130px;
+                font-size: 1em;
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Jogue e Ganhe um Vale</h1>
+        <p>Nosso amor acelera mais forte que qualquer carrinho — e nunca freia</p>
+    </header>
+
+    <nav class="navbar">
+        <a href="index.html" class="nav-link">Sobre nós</a>
+    </nav>
+
+    <div id="start-line"></div>
+
+    <div id="car">
+        <img src="fotos/carrao.png" alt="Carrinho de corrida" />
+    </div>
+
+    <div id="finish-line"></div>
+    <div id="message-finish"></div>
+
+    <script>
+        const car = document.getElementById('car');
+        const finish = document.getElementById('finish-line');
+        const start = document.getElementById('start-line');
+        const message = document.getElementById('message-finish');
+
+        const velocidade = 5;
+
+        const cupons = [
+            "Vale um cinema! 🍿",
+            "Vale um lanche! 🍔",
+            "Vale abraços Ilimitados! 🤗",
+            "Vale um jantar romântico! 🍝",
+            "Vale uma massagem relaxante! 💆‍♀️",
+            "Vale um passeio surpresa! 🚗",
+            "Vale um café especial! ☕",
+            "Vale uma noite de filme juntos! 🎬",
+            "Vale um pacote de Lay's 😋",
+            "Vale uma partida de Brawl Stars 🎮",
+            "Vale um beijo 😘",
+            "Vale uma barra de Sonho de Valsa 🍫",
+            "Vale qualquer coisa que você quiser fazer ✨"
+        ];
+
+        let ultimoCupomIndex = -1;
+        let mostrandoMensagem = false;
+        let dentroDaLinha = false;
+
+        let posX;
+        let posY;
+        let limiteSuperior; // Variável para o limite superior
+
+        // Função para calcular e definir o limite superior (para o carrinho não passar o header/nav)
+        function updateLimiteSuperior() {
+             const headerHeight = document.querySelector('header').offsetHeight;
+             const navHeight = document.querySelector('nav.navbar').offsetHeight;
+             // Margem extra para o carrinho não ficar colado
+             limiteSuperior = headerHeight + navHeight + 10; // 10px de margem
+        }
+
+        // Função para definir a posição inicial do carrinho (um pouco à frente da linha de partida)
+        function setInitialCarPosition() {
+            updateLimiteSuperior(); // Garante que o limite superior está atualizado
+            const startRect = start.getBoundingClientRect();
+            const currentCarWidth = car.offsetWidth;
+            const currentCarHeight = car.offsetHeight;
+
+            // Posição X: alinhado com o centro da linha de partida, ou um pouco à frente dela
+            // Vamos posicioná-lo 20px à direita da linha de partida, considerando a largura do carro
+            posX = startRect.left + startRect.width + (currentCarWidth / 2) + 20; // 20px de margem
+            // Posição Y: alinhado com o centro da linha de partida
+            posY = startRect.top + startRect.height / 2;
+
+            // Garante que a posição inicial Y não esteja acima do limite superior
+            if (posY < limiteSuperior) {
+                posY = limiteSuperior + currentCarHeight / 2; // Coloca o carrinho logo abaixo do limite
+            }
+
+            atualizarPosicao();
+        }
+
+        // Atualiza a posição do carrinho na tela
+        function atualizarPosicao() {
+            const currentCarWidth = car.offsetWidth;
+            const currentCarHeight = car.offsetHeight;
+
+            // Limitações de movimento
+            const x = Math.min(window.innerWidth - currentCarWidth / 2, Math.max(currentCarWidth / 2, posX));
+            const y = Math.min(window.innerHeight - currentCarHeight / 2, Math.max(limiteSuperior, posY)); // Aplica o limite superior aqui!
+
+            car.style.left = (x - currentCarWidth / 2) + 'px';
+            car.style.top = (y - currentCarHeight / 2) + 'px';
+
+            checkFinish(x, y);
+        }
+
+
+        // Movimento via teclado para desktop
+        let teclas = { ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false };
+
+        document.addEventListener('keydown', e => {
+            if (e.key in teclas) teclas[e.key] = true;
+        });
+
+        document.addEventListener('keyup', e => {
+            if (e.key in teclas) teclas[e.key] = false;
+        });
+
+        function moverComTeclado() {
+            if (teclas.ArrowUp) posY -= velocidade;
+            if (teclas.ArrowDown) posY += velocidade;
+            if (teclas.ArrowLeft) posX -= velocidade;
+            if (teclas.ArrowRight) posX += velocidade;
+
+            atualizarPosicao();
+            requestAnimationFrame(moverComTeclado);
+        }
+
+        // --- CONTROLE POR TOQUE PARA MOBILE ---
+        let isDragging = false;
+        car.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            e.preventDefault();
+        }, { passive: false });
+
+        document.addEventListener('touchmove', (e) => {
+            if (isDragging) {
+                const touch = e.touches[0];
+                posX = touch.clientX;
+                posY = touch.clientY;
+                atualizarPosicao();
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        document.addEventListener('touchend', () => {
+            isDragging = false;
+        });
+        // --- FIM CONTROLE POR TOQUE ---
+
+
+        function checkFinish(x, y) {
+            const rect = finish.getBoundingClientRect();
+            const centroX = x;
+            const centroY = y;
+
+            const estaNaLinha = (
+                centroX >= rect.left &&
+                centroX <= rect.right &&
+                centroY >= rect.top &&
+                centroY <= rect.bottom
+            );
+
+            if (estaNaLinha && !dentroDaLinha) {
+                dentroDaLinha = true;
+                showMessage();
+            } else if (!estaNaLinha && dentroDaLinha) {
+                dentroDaLinha = false;
+                hideMessage();
+                resetarPosicao();
+            }
+        }
+
+        function showMessage() {
+            mostrandoMensagem = true;
+            setTimeout(() => {
+                let novoIndex;
+                do {
+                    novoIndex = Math.floor(Math.random() * cupons.length);
+                } while (novoIndex === ultimoCupomIndex);
+                ultimoCupomIndex = novoIndex;
+                message.textContent = cupons[novoIndex];
+                message.classList.add('show');
+            }, 300);
+        }
+
+        function hideMessage() {
+            mostrandoMensagem = false;
+            message.classList.remove('show');
+        }
+
+        // Função para resetar a posição para o início (um pouco à frente da linhaaaaa)
+        function resetarPosicao() {
+            setInitialCarPosition();
+        }
+
+        // Chama a função de inicialização quando a página carrega e no redimensionamento
+        window.addEventListener('load', () => {
+            setInitialCarPosition(); // Define a posição inicial na carga da página
+            moverComTeclado(); // Inicia o loop de movimento
+        });
+
+        window.addEventListener('resize', () => {
+            setInitialCarPosition(); // Recalcula a posição inicial e o limite superior no redimensionamento
+        });
+
+    </script>
+
+</body>
+</html>
