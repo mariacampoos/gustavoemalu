@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <title>Valinhos</title>
+    <title>Gustavo e Malu</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet" />
 
@@ -14,7 +14,6 @@
             background: #fff;
             position: relative;
             overflow: hidden; /* Cuidado com este em mobile, pode cortar conteúdo */
-            /* cursor: none; */ /* Comentado para não interferir com toque e ser padrão em desktop */
             min-height: 100vh;
         }
 
@@ -67,10 +66,10 @@
             position: fixed; /* fixo para melhor comportamento em mobile */
             width: 60px;
             height: 60px;
-            pointer-events: none; /* Mantemos para não interferir com cliques de outros elementos, mas o JS vai gerenciar o arrastar */
             user-select: none;
             z-index: 25;
             touch-action: none; /* Previne rolagem ou zoom padrão durante o arrastar */
+            /* border: 2px solid blue; /* Apenas para depuração, remova depois */ 
         }
 
         #car img {
@@ -78,7 +77,6 @@
             height: 100%;
             object-fit: contain;
             user-select: none;
-            pointer-events: none;
         }
 
         #finish-line {
@@ -98,6 +96,7 @@
             box-shadow: 0 0 10px #6A1B9A;
             z-index: 20;
             user-select: none;
+            /* border: 2px solid red; /* Apenas para depuração, remova depois */ 
         }
 
         #start-line {
@@ -117,6 +116,7 @@
             box-shadow: 0 0 10px #BA68C8;
             z-index: 20;
             user-select: none;
+            /* border: 2px solid green; /* Apenas para depuração, remova depois */ 
         }
 
         #message-finish {
@@ -135,12 +135,45 @@
             user-select: none;
             z-index: 30;
             transition: opacity 0.5s ease-in-out;
+            /* border: 2px solid purple; /* Apenas para depuração, remova depois */ 
         }
 
         #message-finish.show {
             opacity: 1;
             pointer-events: auto;
         }
+
+        /* --- CSS para os Botões de Controle --- */
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 40;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            /* border: 2px dashed orange; /* Apenas para depuração, remova depois */ 
+        }
+
+        .control-button {
+            background-color: #8e24aa;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .control-button:active {
+            background-color: #6a1b9a;
+        }
+
 
         /* --- MEDIA QUERIES PARA MOBILE --- */
         @media (max-width: 768px) {
@@ -162,24 +195,24 @@
             }
 
             #car {
-                width: 45px; /* Reduz o tamanho do carro em mobile */
+                width: 45px;
                 height: 45px;
             }
 
             #start-line {
-                top: 180px; /* Ajuste para evitar sobreposição com header/nav */
+                top: 190px; /* Ajustado para dar mais espaço */
                 height: 60px;
                 left: 10px;
             }
 
             #finish-line {
-                bottom: 100px; /* Ajuste para subir a linha de chegada */
+                bottom: 110px; /* Ajuste para subir a linha e dar espaço aos botões */
                 height: 60px;
                 right: 10px;
             }
 
             #message-finish {
-                bottom: 170px; /* Ajuste para acompanhar a linha de chegada */
+                bottom: 180px; /* Ajuste para acompanhar a linha de chegada */
                 font-size: 1.1em;
                 padding: 10px 15px;
                 right: 10px;
@@ -199,24 +232,40 @@
             }
 
             #car {
-                width: 40px; /* Ainda menor em telas de celular */
+                width: 40px;
                 height: 40px;
             }
 
             #start-line {
-                top: 200px; /* Mais para cima em telas menores */
+                top: 170px; /* Ajustado um pouco mais para cima */
                 height: 50px;
             }
 
             #finish-line {
-                bottom: 70px; /* Mais para cima em telas menores */
+                bottom: 80px; /* Mais para cima em telas menores, para não conflitar com controles */
                 height: 50px;
             }
 
             #message-finish {
-                bottom: 130px;
+                bottom: 140px; /* Ajustado para acompanhar a nova posição da finish-line */
                 font-size: 1em;
                 padding: 8px 12px;
+            }
+
+            .controls {
+                gap: 5px;
+                bottom: 10px;
+            }
+            .control-button {
+                padding: 12px 20px;
+                font-size: 1em;
+            }
+        }
+
+        /* Opcional: esconder os botões em desktop se preferir apenas teclado e arrastar */
+        @media (min-width: 769px) {
+            .controls {
+                display: none; /* Esconde os botões em telas maiores que 768px */
             }
         }
     </style>
@@ -241,11 +290,23 @@
     <div id="finish-line"></div>
     <div id="message-finish"></div>
 
+    <div class="controls">
+        <button id="upBtn" class="control-button">⬆️</button>
+        <button id="leftBtn" class="control-button">⬅️</button>
+        <button id="rightBtn" class="control-button">➡️</button>
+        <button id="downBtn" class="control-button">⬇️</button>
+    </div>
+
     <script>
         const car = document.getElementById('car');
         const finish = document.getElementById('finish-line');
         const start = document.getElementById('start-line');
         const message = document.getElementById('message-finish');
+
+        const upBtn = document.getElementById('upBtn');
+        const downBtn = document.getElementById('downBtn');
+        const leftBtn = document.getElementById('leftBtn');
+        const rightBtn = document.getElementById('rightBtn');
 
         const velocidade = 5;
 
@@ -269,34 +330,32 @@
         let mostrandoMensagem = false;
         let dentroDaLinha = false;
 
-        let posX;
-        let posY;
-        let limiteSuperior; // Variável para o limite superior
+        let posX; // Posição X do centro do carro
+        let posY; // Posição Y do centro do carro
+        let limiteSuperior;
 
         // Função para calcular e definir o limite superior (para o carrinho não passar o header/nav)
         function updateLimiteSuperior() {
-             const headerHeight = document.querySelector('header').offsetHeight;
-             const navHeight = document.querySelector('nav.navbar').offsetHeight;
-             // Margem extra para o carrinho não ficar colado
-             limiteSuperior = headerHeight + navHeight + 10; // 10px de margem
+            const headerHeight = document.querySelector('header').offsetHeight;
+            const navHeight = document.querySelector('nav.navbar').offsetHeight;
+            limiteSuperior = headerHeight + navHeight + 10; // 10px de margem
         }
 
         // Função para definir a posição inicial do carrinho (um pouco à frente da linha de partida)
         function setInitialCarPosition() {
-            updateLimiteSuperior(); // Garante que o limite superior está atualizado
+            updateLimiteSuperior();
             const startRect = start.getBoundingClientRect();
             const currentCarWidth = car.offsetWidth;
             const currentCarHeight = car.offsetHeight;
 
-            // Posição X: alinhado com o centro da linha de partida, ou um pouco à frente dela
-            // Vamos posicioná-lo 20px à direita da linha de partida, considerando a largura do carro
-            posX = startRect.left + startRect.width + (currentCarWidth / 2) + 20; // 20px de margem
-            // Posição Y: alinhado com o centro da linha de partida
+            // Define a posição X um pouco à direita da linha de partida
+            posX = startRect.left + startRect.width + (currentCarWidth / 2) + 20;
+            // Define a posição Y centralizada com a linha de partida
             posY = startRect.top + startRect.height / 2;
 
             // Garante que a posição inicial Y não esteja acima do limite superior
             if (posY < limiteSuperior) {
-                posY = limiteSuperior + currentCarHeight / 2; // Coloca o carrinho logo abaixo do limite
+                posY = limiteSuperior + currentCarHeight / 2;
             }
 
             atualizarPosicao();
@@ -307,18 +366,24 @@
             const currentCarWidth = car.offsetWidth;
             const currentCarHeight = car.offsetHeight;
 
-            // Limitações de movimento
-            const x = Math.min(window.innerWidth - currentCarWidth / 2, Math.max(currentCarWidth / 2, posX));
-            const y = Math.min(window.innerHeight - currentCarHeight / 2, Math.max(limiteSuperior, posY)); // Aplica o limite superior aqui!
+            // Limitações de movimento para não sair da tela
+            // Considera o centro do carro para os limites
+            const minX = currentCarWidth / 2;
+            const maxX = window.innerWidth - currentCarWidth / 2;
+            const minY = limiteSuperior; // Já considera o limite superior
+            const maxY = window.innerHeight - currentCarHeight / 2;
 
-            car.style.left = (x - currentCarWidth / 2) + 'px';
-            car.style.top = (y - currentCarHeight / 2) + 'px';
+            posX = Math.min(maxX, Math.max(minX, posX));
+            posY = Math.min(maxY, Math.max(minY, posY));
 
-            checkFinish(x, y);
+            // Aplica as posições ao elemento do carro (top/left são do canto superior esquerdo)
+            car.style.left = (posX - currentCarWidth / 2) + 'px';
+            car.style.top = (posY - currentCarHeight / 2) + 'px';
+
+            checkFinish(); // Chama a verificação de colisão
         }
 
-
-        // Movimento via teclado para desktop
+        // Movimento via teclado
         let teclas = { ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false };
 
         document.addEventListener('keydown', e => {
@@ -329,49 +394,93 @@
             if (e.key in teclas) teclas[e.key] = false;
         });
 
-        function moverComTeclado() {
+        // Variáveis para controlar o movimento pelos botões
+        let movingUp = false;
+        let movingDown = false;
+        let movingLeft = false;
+        let movingRight = false;
+
+        // Loop principal do jogo para movimentação (teclado e botões)
+        function gameLoop() {
+            // Aplica movimento de teclado
             if (teclas.ArrowUp) posY -= velocidade;
             if (teclas.ArrowDown) posY += velocidade;
             if (teclas.ArrowLeft) posX -= velocidade;
             if (teclas.ArrowRight) posX += velocidade;
 
-            atualizarPosicao();
-            requestAnimationFrame(moverComTeclado);
+            // Aplica movimento de botões
+            if (movingUp) posY -= velocidade;
+            if (movingDown) posY += velocidade;
+            if (movingLeft) posX -= velocidade;
+            if (movingRight) posX += velocidade;
+
+            atualizarPosicao(); // Sempre atualiza a posição e checa a linha de chegada
+            requestAnimationFrame(gameLoop); // Continua o loop
         }
 
-        // --- CONTROLE POR TOQUE PARA MOBILE ---
+        // --- CONTROLE POR TOQUE PARA MOBILE (Arrastar o carro) ---
         let isDragging = false;
         car.addEventListener('touchstart', (e) => {
             isDragging = true;
-            e.preventDefault();
+            e.preventDefault(); // Importante para evitar rolagem da página
         }, { passive: false });
 
         document.addEventListener('touchmove', (e) => {
             if (isDragging) {
                 const touch = e.touches[0];
-                posX = touch.clientX;
+                posX = touch.clientX; // A posição do toque já é o "centro" da interação
                 posY = touch.clientY;
-                atualizarPosicao();
-                e.preventDefault();
+                atualizarPosicao(); // Atualiza a posição imediatamente para o arrasto
+                e.preventDefault(); // Importante para evitar rolagem da página
             }
         }, { passive: false });
 
         document.addEventListener('touchend', () => {
             isDragging = false;
         });
-        // --- FIM CONTROLE POR TOQUE ---
+        // --- FIM CONTROLE POR TOQUE (Arrastar) ---
 
 
-        function checkFinish(x, y) {
-            const rect = finish.getBoundingClientRect();
-            const centroX = x;
-            const centroY = y;
+        // --- Event Listeners para Botões (para mobile/clique) ---
+        // Event Listeners para MOUSE (para desktop ou clique)
+        upBtn.addEventListener('mousedown', () => movingUp = true);
+        downBtn.addEventListener('mousedown', () => movingDown = true);
+        leftBtn.addEventListener('mousedown', () => movingLeft = true);
+        rightBtn.addEventListener('mousedown', () => movingRight = true);
 
+        upBtn.addEventListener('mouseup', () => movingUp = false);
+        downBtn.addEventListener('mouseup', () => movingDown = false);
+        leftBtn.addEventListener('mouseup', () => movingLeft = false);
+        rightBtn.addEventListener('mouseup', () => movingRight = false);
+
+        // Event Listeners para TOQUE (para mobile)
+        upBtn.addEventListener('touchstart', (e) => { e.preventDefault(); movingUp = true; }, { passive: false });
+        downBtn.addEventListener('touchstart', (e) => { e.preventDefault(); movingDown = true; }, { passive: false });
+        leftBtn.addEventListener('touchstart', (e) => { e.preventDefault(); movingLeft = true; }, { passive: false });
+        rightBtn.addEventListener('touchstart', (e) => { e.preventDefault(); movingRight = true; }, { passive: false });
+
+        upBtn.addEventListener('touchend', () => movingUp = false);
+        downBtn.addEventListener('touchend', () => movingDown = false);
+        leftBtn.addEventListener('touchend', () => movingLeft = false);
+        rightBtn.addEventListener('touchend', () => movingRight = false);
+        upBtn.addEventListener('touchcancel', () => movingUp = false);
+        downBtn.addEventListener('touchcancel', () => movingDown = false);
+        leftBtn.addEventListener('touchcancel', () => movingLeft = false);
+        rightBtn.addEventListener('touchcancel', () => movingRight = false);
+        // --- FIM CONTROLE POR BOTÕES ---
+
+
+        // Função de verificação de colisão mais robusta
+        function checkFinish() {
+            const carRect = car.getBoundingClientRect();
+            const finishRect = finish.getBoundingClientRect();
+
+            // Verifica se há sobreposição entre as caixas delimitadoras do carro e da linha de chegada
             const estaNaLinha = (
-                centroX >= rect.left &&
-                centroX <= rect.right &&
-                centroY >= rect.top &&
-                centroY <= rect.bottom
+                carRect.left < finishRect.right &&
+                carRect.right > finishRect.left &&
+                carRect.top < finishRect.bottom &&
+                carRect.bottom > finishRect.top
             );
 
             if (estaNaLinha && !dentroDaLinha) {
@@ -402,15 +511,14 @@
             message.classList.remove('show');
         }
 
-        // Função para resetar a posição para o início (um pouco à frente da linhaaaaa)
         function resetarPosicao() {
             setInitialCarPosition();
         }
 
         // Chama a função de inicialização quando a página carrega e no redimensionamento
         window.addEventListener('load', () => {
-            setInitialCarPosition(); // Define a posição inicial na carga da página
-            moverComTeclado(); // Inicia o loop de movimento
+            setInitialCarPosition();
+            gameLoop(); // Inicia o loop principal do jogo
         });
 
         window.addEventListener('resize', () => {
